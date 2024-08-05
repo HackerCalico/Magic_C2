@@ -1,0 +1,203 @@
+﻿<Window x:Class="Client.SessionController"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Magic C2" FontSize="14" Height="640" Width="1370">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <ToolBar Grid.Row="0">
+                <Button Content="生成后门" x:Name="GenerateBackDoor" Click="OpenTool_Click"/>
+                <Label Content="|"/>
+                <Button Content="监听配置" x:Name="ListenerConfig" Click="OpenTool_Click"/>
+                <Label Content="|"/>
+                <Button Content="系统日志" x:Name="SystemLog" Click="OpenTool_Click"/>
+                <TextBlock x:Name="alarm" Text="告警" Visibility="Collapsed" Foreground="White" Background="Red" Height="20" Padding="3,1,3,3"/>
+                <Label Content="|"/>
+                <Button Content="待定会话" x:Name="PendingSession" Click="OpenTool_Click"/>
+                <TextBlock x:Name="pendingSessionNumber" Text="0" Foreground="White" Background="Red" Height="20" Padding="3,1,3,3"/>
+                <Label Content="|"/>
+                <Button Content="切换主题" x:Name="ToggleTheme" Click="OpenTool_Click" ToolTipService.InitialShowDelay="0">
+                    <Button.ToolTip>
+                        <ToolTip Background="LightGray" >
+                            <TextBlock Text="如果切换失败，请尝试在出现白色表头时反复开关 “系统日志” 进行刷新。"/>
+                        </ToolTip>
+                    </Button.ToolTip>
+                </Button>
+            </ToolBar>
+
+            <DataGrid Grid.Row="1" x:Name="sessionInfoList_DataGrid" IsReadOnly="True" HeadersVisibility="Column" AutoGenerateColumns="False" GridLinesVisibility="Horizontal" HorizontalScrollBarVisibility="Disabled">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="FID" Binding="{Binding fid}" Width="40"/>
+                    <DataGridTextColumn Header="SID" Binding="{Binding sid}" Width="70"/>
+                    <DataGridTextColumn Header="公网 IP" Binding="{Binding publicIP}" Width="90"/>
+                    <DataGridTextColumn Header="内网 IP" Binding="{Binding privateIP}" Width="90"/>
+                    <DataGridTextColumn Header="用户名" Binding="{Binding username}" Width="80"/>
+                    <DataGridTextColumn Header="进程名" Binding="{Binding processName}" Width="80"/>
+                    <DataGridTextColumn Header="PID" Binding="{Binding pid}" Width="50"/>
+                    <DataGridTextColumn Header="位数" Binding="{Binding bit}" Width="40"/>
+                    <DataGridTextColumn Header="监听器" Binding="{Binding listenerName}" Width="90"/>
+                    <DataGridTextColumn Header="上线时间" Binding="{Binding connectTime}" Width="120"/>
+                    <DataGridTextColumn Header="心跳" Binding="{Binding currentHeartbeat}" Width="50"/>
+                    <DataGridTemplateColumn Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="❌" PreviewMouseLeftButtonDown="DeleteSessionInfo_PreviewMouseLeftButtonDown" FontSize="10" Background="White" Width="22" Margin="-2"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="SelectSessionInfo_PreviewMouseLeftButtonDown"/>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                    </Style>
+                </DataGrid.Resources>
+            </DataGrid>
+        </Grid>
+
+        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
+
+        <TabControl Grid.Column="2" x:Name="controlModule_TabControl">
+            <TabItem Header="版本信息">
+                <WebBrowser x:Name="VersionInfo_WebBrowser"/>
+            </TabItem>
+
+            <TabItem x:Name="terminal_TabItem" Header="命令终端" PreviewMouseLeftButtonDown="SelectTerminalTabItem_PreviewMouseLeftButtonDown">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TabControl Grid.Row="0" x:Name="terminal_TabControl" SelectionChanged="SelectSubTerminalTabItem_SelectionChanged"/>
+                    <TextBox Grid.Row="1" KeyDown="RunTerminalCommand_KeyDown"  Foreground="Lime" Background="Black" Margin="3,-3,3,3" Padding="3"/>
+                </Grid>
+            </TabItem>
+
+            <TabItem x:Name="fileManager_TabItem" Header="文件管理" PreviewMouseLeftButtonDown="SelectFileManagerTabItem_PreviewMouseLeftButtonDown">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="450"/>
+                    </Grid.ColumnDefinitions>
+                    <!-- 左侧 -->
+                    <Border Grid.Column="0" Margin="5">
+                        <TreeView x:Name="dirTree_TreeView" Padding="-4,5,5,5">
+                            <TreeView.ItemTemplate>
+                                <HierarchicalDataTemplate ItemsSource="{Binding subFileInfoList}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox IsReadOnly="True" Padding="1">
+                                            <TextBox.Text>
+                                                <MultiBinding StringFormat="{}{0} {1}">
+                                                    <Binding Path="fileType"/>
+                                                    <Binding Path="fileName"/>
+                                                </MultiBinding>
+                                            </TextBox.Text>
+                                            <TextBox.Style>
+                                                <Style TargetType="TextBox">
+                                                    <EventSetter Event="MouseDoubleClick" Handler="GetDirTreePathFileInfoList_MouseDoubleClick"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding fileType}" Value="📁">
+                                                            <Setter Property="Foreground" Value="Black"/>
+                                                            <Setter Property="Background" Value="Yellow"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBox.Style>
+                                        </TextBox>
+                                    </StackPanel>
+                                </HierarchicalDataTemplate>
+                            </TreeView.ItemTemplate>
+                            <TreeView.ItemContainerStyle>
+                                <Style TargetType="TreeViewItem">
+                                    <Setter Property="IsExpanded" Value="{Binding isExpand}"/>
+                                </Style>
+                            </TreeView.ItemContainerStyle>
+                        </TreeView>
+                    </Border>
+                    <!-- 右侧 -->
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" x:Name="inputPath_TextBox" Padding="3" Margin="0,5,5,5"/>
+                            <Button Grid.Column="1" Content="访问" Click="GetInputPathFileInfoList_Click" Background="White" Margin="0,5,5,5" Padding="3"/>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <DataGrid Grid.Row="0" x:Name="fileInfoList_DataGrid" IsReadOnly="True" MaxHeight="700" HeadersVisibility="Column" AutoGenerateColumns="False" HorizontalScrollBarVisibility="Disabled" Margin="0,0,5,0">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="类型" Binding="{Binding fileType}"/>
+                                    <DataGridTextColumn Header="名称" Binding="{Binding fileName}" Width="*"/>
+                                    <DataGridTextColumn Header="大小" Binding="{Binding fileSize}"/>
+                                    <DataGridTextColumn Header="修改时间" Binding="{Binding fileChangeTime}" Width="*"/>
+                                    <DataGridTextColumn Binding="{Binding filePath}" Visibility="Hidden"/>
+                                </DataGrid.Columns>
+                                <DataGrid.ContextMenu>
+                                    <ContextMenu FontSize="14" Padding="0,0,-45,0">
+                                        <MenuItem Header="分块上传" Click="UploadFile_Click"/>
+                                        <MenuItem Header="分块下载" Click="DownloadFile_Click"/>
+                                        <MenuItem Header="剪切" Click="CutFile_Click"/>
+                                        <MenuItem Header="复制" Click="CopyFile_Click"/>
+                                        <MenuItem Header="粘贴" Click="PasteFile_Click"/>
+                                        <MenuItem Header="删除文件" Click="DeleteFile_Click"/>
+                                        <MenuItem Header="新建文件夹" Click="CreateFolder_Click"/>
+                                        <MenuItem Header="重新获取" Click="ReGetFileInfoList_Click"/>
+                                    </ContextMenu>
+                                </DataGrid.ContextMenu>
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <EventSetter Event="MouseDoubleClick" Handler="GetFileInfoListPathFileInfoList_MouseDoubleClick"/>
+                                        <EventSetter Event="ContextMenuOpening" Handler="SelectFileInfoFromMenu"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding fileType}" Value="📁">
+                                                <Setter Property="Foreground" Value="Black"/>
+                                                <Setter Property="Background" Value="Yellow"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.RowStyle>
+                            </DataGrid>
+                            <!-- 空白区域 -->
+                            <Border Grid.Row="2" Background="Transparent">
+                                <Border.ContextMenu>
+                                    <ContextMenu FontSize="14">
+                                        <MenuItem Header="分块上传" Click="UploadFile_Click"/>
+                                        <MenuItem Header="粘贴" Click="PasteFile_Click"/>
+                                        <MenuItem Header="新建文件夹" Click="CreateFolder_Click"/>
+                                        <MenuItem Header="重新获取" Click="ReGetFileInfoList_Click"/>
+                                    </ContextMenu>
+                                </Border.ContextMenu>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
