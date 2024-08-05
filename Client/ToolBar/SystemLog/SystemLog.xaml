@@ -1,0 +1,21 @@
+﻿<Window x:Class="Client.SystemLog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="系统日志" FontSize="14" Height="500" Width="600">
+    <DataGrid x:Name="systemLogInfoList_DataGrid" IsReadOnly="True" HeadersVisibility="Column" AutoGenerateColumns="False">
+        <DataGrid.Columns>
+            <DataGridTextColumn Binding="{Binding id}" Visibility="Hidden"/>
+            <DataGridTextColumn Header="用户名" Binding="{Binding username}"/>
+            <DataGridTextColumn Header="日志内容" Binding="{Binding content}" Width="*"/>
+            <DataGridTextColumn Header="时间" Binding="{Binding time}"/>
+        </DataGrid.Columns>
+        <DataGrid.ColumnHeaderStyle>
+            <Style TargetType="DataGridColumnHeader">
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            </Style>
+        </DataGrid.ColumnHeaderStyle>
+    </DataGrid>
+</Window>

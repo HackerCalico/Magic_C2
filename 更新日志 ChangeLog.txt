@@ -1,0 +1,39 @@
+v0.1.0 Demo - 2024.7.17
+首次发布。
+
+v0.1.0 Demo - 2024.7.17
+Initial Release.
+
+v1.0.0 Beta - 2024.7.31
+(1) 新功能：
+1. Light / Dark 主题切换。
+2. "远程抗沙箱" 支持获取截图。
+3. 支持 ShellCode 生成。
+4. 进程迁移插件。
+5. 重写了 Profile、"生成器"，更加标准化。
+6. 重写了 "后门"、"命令控制机制"，从复杂的数据结构处理改为简单的 Json 处理。
+7. "运行环境" 自动检查。
+(2) 优化修复：
+1. 采用更准确的 "命令脚本" 调用方式。
+2. "告警" 通知从 "弹框" 改为 "系统日志" 处的红色标记。
+3. "命令终端" 的输入框不会被刷新清空。
+4. 会话在列表中位置固定，不会上下跳动。
+5. 添加 "监听器" 时检查端口是否重复。
+6. 更多异常捕获。
+
+v1.0.0 Beta - 2024.7.31
+(1) New features:
+1. Light / Dark theme switching.
+2. "Remote anti-sandbox" supports taking screenshots.
+3. Support ShellCode generation.
+4. Process migration plug-in.
+5. Rewritten Profile and "Generator" to make them more standardized.
+6. Rewritten the "backdoor" and "command control mechanism" from complex data structure processing to simple Json processing.
+7. "Running environment" automatic check.
+(2) Optimization and repair:
+1. Use a more accurate "command script" calling method.
+2. The "Alarm" notification is changed from a "pop-up box" to a red mark at the "System Log".
+3. The input box of "Command Terminal" will not be refreshed and cleared.
+4. The session has a fixed position in the list and will not jump up and down.
+5. Check whether the port is duplicated when adding a "listener".
+6. More exception catching.
