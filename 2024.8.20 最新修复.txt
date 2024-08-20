@@ -1,7 +1,9 @@
 之前的 Profile 中有一处错误导致 Host 更改失败，已修复。
 
-如果你在生成后门过程中出现错误，可以尝试将 HttpReverseLoader、HttpReverseShell 中的 Original 后缀去掉。
+后门生成过程是根据 Profile 更改源码编译生成，所以会将 HttpReverseShell、HttpReverseLoader 中的关键源码复制一份改名为 Original 后缀用于最后还原。
+如果你在后门生成过程中出现错误或主动关闭了窗口导致 Original 没有还原，请手动还原。
 
 There was a bug in the previous Profile that caused Host changes to fail. This has been fixed.
 
-If you encounter an error when generating the backdoor, you can try to remove the Original suffix in HttpReverseLoader and HttpReverseShell.
+The backdoor generation process is based on changing the source code of Profile, so a copy of the key source code in HttpReverseShell and HttpReverseLoader will be copied and renamed with the Original suffix for final restoration.
+If you make an error during the backdoor generation process or actively close the window and the Original is not restored, please restore it manually.
