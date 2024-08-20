@@ -1,0 +1,7 @@
+之前的 Profile 中有一处错误导致 Host 更改失败，已修复。
+
+如果你在生成后门过程中出现错误，可以尝试将 HttpReverseLoader、HttpReverseShell 中的 Original 后缀去掉。
+
+There was a bug in the previous Profile that caused Host changes to fail. This has been fixed.
+
+If you encounter an error when generating the backdoor, you can try to remove the Original suffix in HttpReverseLoader and HttpReverseShell.
