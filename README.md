@@ -6,6 +6,12 @@
 
 ### Please give me Star 🌟, thank you very much! It is very important to me!
 
+我知道这个刚出炉的项目仍然存在一些问题，所以我正在开发 v2.0。这将是一个脱胎换骨的版本，也就意味着需要时间，同时我下半年也在备考。
+大家可以看这里：https://github.com/HackerCalico/Magic_C2/issues/6
+
+I know there are still some issues with this new project, so I am working on v2.0. It's going to be a completely different version, which means it's going to take time, and I'm also preparing for the exam in the second half of the year.
+You can see here: https://github.com/HackerCalico/Magic_C2/issues/6
+
 ### 1. 介绍
 
 Version: Magic C2 v1.0.0 Beta
