@@ -6,11 +6,11 @@
 
 ### Please give me Star 🌟, thank you very much! It is very important to me!
 
-我知道这个刚出炉的项目仍然存在一些问题，还不能直接用于实战，所以我正在开发 v2.0。这将是一个脱胎换骨的版本，也就意味着需要时间，同时我下半年也在备考，预计明年发布。
-大家可以看这里：https://github.com/HackerCalico/Magic_C2/issues/6
+<mark>我知道这个刚出炉的项目仍然存在一些问题，还不能直接用于实战，所以我正在开发 v2.0。这将是一个脱胎换骨的版本，也就意味着需要时间，同时我下半年也在备考，预计明年发布。
+大家可以看这里：https://github.com/HackerCalico/Magic_C2/issues/6</mark>
 
-I know this fledgling project still has some issues and isn't ready for practical use yet, so I'm working on v2.0. This will be a completely new version, which means it will take time. At the same time, I am also preparing for the exam in the second half of the year and it is expected to be released next year.
-You can see here: https://github.com/HackerCalico/Magic_C2/issues/6
+<mark>I know this fledgling project still has some issues and isn't ready for practical use yet, so I'm working on v2.0. This will be a completely new version, which means it will take time. At the same time, I am also preparing for the exam in the second half of the year and it is expected to be released next year.
+You can see here: https://github.com/HackerCalico/Magic_C2/issues/6</mark>
 
 ### 1. 介绍
 
