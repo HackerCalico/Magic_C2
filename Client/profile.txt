@@ -1,0 +1,14 @@
+{
+    "sleepBase": "2000",
+    "sleepOffsetMax": "1000",
+    "httpHeader": {
+        "Path": "/",
+        "Host": "www.google.com.hk",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
+    },
+    "StackSpoofing": {
+        "useSpareGadget": "true",
+        "gadgetSig": "mov rbx, qword ptr [rbx]\njmp rbx",
+        "spareGadgetSig": "jmp qword ptr [rbx]"
+    }
+}

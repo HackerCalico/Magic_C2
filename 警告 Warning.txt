@@ -1,5 +1,0 @@
-请不要直接将 "使用过的项目" 发送给其他人。
-记得清除 ".db" 数据库文件的数据 (Debug x3 / Releases x2)，并使用 SQL 命令 (vacuum;) 来清除缓存，否则数据不会被真的清除。
-
-Please do not send "used items" directly to others.
-Remember to clear the data of the ".db" database file (Debug x3 / Releases x2) and use the SQL command (vacuum;) to clear the cache, otherwise the data will not be really cleared.

@@ -1,158 +1,98 @@
 # Magic_C2
 
-### English: https://hackercalico.github.io/Magic_C2_EN.html
+### Your star inspires me ~🌟
 
-### 请给我 Star 🌟，非常感谢！这对我很重要！
-
-### Please give me Star 🌟, thank you very much! It is very important to me!
-
-<mark>我知道这个刚出炉的项目仍然存在一些问题，还不能直接用于实战，所以我正在开发 v2.0。这将是一个脱胎换骨的版本，也就意味着需要时间，同时我下半年也在备考，预计明年发布。
-大家可以看这里：https://github.com/HackerCalico/Magic_C2/issues/6</mark>
-
-<mark>I know this fledgling project still has some issues and isn't ready for practical use yet, so I'm working on v2.0. This will be a completely new version, which means it will take time. At the same time, I am also preparing for the exam in the second half of the year and it is expected to be released next year.
-You can see here: https://github.com/HackerCalico/Magic_C2/issues/6</mark>
+### 你的 Star 是我前进的动力 ~🌟
 
 ### 1. 介绍
 
-Version: Magic C2 v1.0.0 Beta
+Version: Magic C2 v2.0 Beta
 
 项目: https://github.com/HackerCalico/Magic_C2
 
-我相信每一位黑客都有自己的梦想！而我的其中一个就是拥有一款自己的 C2，因为实在是太酷啦！
+应网友需求以及我的时间精力状况，在开发完 v2.0 的基础功能后，我就将它发布了出来，希望你们喜欢！
 
-在首发版本的 Issues 中，我看到了大家反馈的许多问题。所以我在近两周的时间里进行了大范围的整改优化，最终得到此版本。虽然与一个成熟的 C2 框架还有一定距离，但也已经非常棒了！
-
-![屏幕截图 2024-07-17 175750.png](https://github.com/HackerCalico/Magic_C2/blob/main/Client/bin/Debug/config/README/1.png)
+![run.png](https://github.com/HackerCalico/Magic_C2/blob/main/run.png)
 
 ### 2. 项目亮点
 
-<mark>(1) 远程抗沙箱</mark>
+1.完全开源，易于二次开发，源码视频讲解: (待录制)
 
-后门的 ShellCode Loader 本身具备通信功能，用户可远程查看沙箱检测数据，进而远程决定后门是否从 "待定" 阶段进入 "正式上线" 阶段，如图 1。
+2.RAT 具备一定免杀能力：
 
-确定进入 "正式上线" 阶段后，服务端会向后门发送 ShellCode 密钥，进而解密加载。
+(1) 反射加载遵循尽可能少的调用 WinApi 的 OPSEC 原则。
 
-规避优势：
+(2) 默认对反射加载器的汇编进行随机混淆以及对 RAT 本体加密，支持反射加载器以内联汇编函数的形式存在 (打破了常规 ShellCode 加载流程)。
 
-1. 即使传输与沙箱检测无关的数据，也可以利用时长绕过部分沙箱检测。
+(3) 默认对 RAT 的所有字符串编译时加密。
 
-2. 因为是人工判定，所以沙箱检测数据可以比常规方式更加灵活，比如图中获取的就是目标主机的截图。
+(4) 默认在 RAT 睡眠时加密堆中的字符串。
 
-3. ShellCode 密钥由服务端发送，在病毒分析中无法通过简单的方式跳过抗沙箱阶段得到 ShellCode 明文。
+(5) 实现了轻量级 C/C++ EXE (ExeLite) 内存加载的新机制，比 BOF 更小更容易开发。
 
-<mark>(2) 隐蔽的 ShellCode 调用接口</mark>
+(6) 默认对所有 WinApi 进行栈欺骗调用 (包括 ExeLite)，支持自定义 Gadget。
 
-本项目结合了 <u>No_X_Memory_ShellCode_Loader</u> 技术: https://github.com/HackerCalico/No_X_Memory_ShellCode_Loader
+(7) 用本项目特有的 CLite 库完全代替 C/C++ 库，RAT 体积缩小超过 90%。
 
-后门进入 "正式上线" 阶段后的所有非通信功能均通过 "自定义汇编解释器" 运行：
+3.跨平台兼容，服务端 Go，客户端 Python 3。
 
-1. 客户端将功能 ShellCode 转为 "自定义汇编指令" ------> 服务端
+### 3. 安装
 
-2. 服务端 ------> 后门 "自定义汇编解释器"
+1.服务端 (Go)：
 
-规避优势：
+在服务端目录执行以下命令：
 
-1. 向后门注入任何新功能无需进行任何内存属性 (R/W/X) 修改操作。
-
-2. 内存中任何时候都不会出现新功能的 ShellCode 机器码。
-
-<mark>(3) 告警通知</mark>
-
-服务端在处理无效的凭证或请求数据时，只会响应空白 / 404，并向所有客户端告警，如图 1。
-
-<mark>(4) 文件分块传输</mark>
-
-文件上传下载均采用分块传输，支持随时暂停、取消与修改块的大小。
-
-![7.png](https://github.com/HackerCalico/Magic_C2/blob/main/Client/bin/Debug/config/README/2.png)
-
-<mark>(5) 二次开发</mark>
-
-项目完全开源，代码简洁，未使用高级语法，插件均为 Python，易于二次开发。
-
-### 3. 二次开发
-
-<mark>(1) 插件开发</mark>
-
-在 Client\script 文件夹中可以看到所有插件。
-
-```shell
-Client
-|— script
-    |— cmd
-    |— inject
-    |— help
-    |— GetFileInfoList_
-    |— UploadFile_
-    ......
+```bash
+go mod init Server
+go get github.com/gin-gonic/gin
+go get github.com/gorilla/websocket
+go get github.com/mattn/go-sqlite3
 ```
 
-其中所有非 "_" 结尾的插件均为 "命令终端" 模块的插件，模块如图。
+go-sqlite3 需要 GCC 的解决方法：
 
-所有插件功能均通过 "自定义汇编解释器" 运行，所以必须先学习 https://github.com/HackerCalico/No_X_Memory_ShellCode_Loader
+(1) 下载 https://github.com/mstorsjo/llvm-mingw/releases 中的 llvm-mingw-2024xxxx-ucrt-x86_64
 
-Python 编写规范可参考 cmd 插件。
+(2) 将 bin 添加至环境变量
 
-![2.png](https://github.com/HackerCalico/Magic_C2/blob/main/Client/bin/Debug/config/README/3.png)
+(3) 设置 CGO_ENABLED=1
 
-目前其他 "_" 结尾的插件均为 "文件管理" 模块的插件，模块如图。
+(4) 重启编译器
 
-![3.png](https://github.com/HackerCalico/Magic_C2/blob/main/Client/bin/Debug/config/README/4.png)
+2.客户端 (Python 3)：
 
-<mark>(2) 后门开发</mark>
-
-在 Shell 文件夹中可以看到 "HTTP 反向 Shell" 和 "HTTP 反向 Loader" 的源码项目。
-
-"HTTP 反向 Shell" 为核心功能的 "反射 DLL ShellCode" 项目。
-
-"HTTP 反向 Loader" 为其 "ShellCode Loader" 项目，包含了 "远程抗沙箱" 功能。
-
-```shell
-Shell
-|— HttpReverseShell
-    |— HttpReverseShell.sln
-|— HttpReverseLoader
-    |— HttpReverseLoader.sln
+```bash
+pip install PyQt6
+pip install appdirs
+pip install websocket-client
+pip install capstone
+pip install keystone-engine
 ```
 
-ShellCode Loader 生命周期：
+3.RAT / ExeLite 二次开发 (C/C++)：
 
-![屏幕截图 2024-07-16 221607.png](https://github.com/HackerCalico/Magic_C2/blob/main/Client/bin/Debug/config/README/5.png)
+Visual Studio Installer ---> 单个组件 ---> LLVM (clang-cl) 和 Clang ---> 安装
 
-ShellCode 生命周期：
+### 4. 已知问题
 
-![屏幕截图 2024-07-16 221608.png](https://github.com/HackerCalico/Magic_C2/blob/main/Client/bin/Debug/config/README/6.png)
+(1) 若伪造 RAT 向服务端发送特殊构造的破坏性数据可能导致服务端瘫痪，解决方法：重写 POST 请求数据加密方式。
 
-<mark>(3) 生成器开发</mark>
+(2) 客户端与服务端的数据库未加密，SQLite 彻底删除数据需要在执行 DELETE 后通过 VACUUM 清除缓存。首次运行会在服务端目录生成 server.db，在 AppData\Local\Magic C2\v2.0\client 生成 client.db。
 
-在 Shell\Generator 文件夹中可以看到一个 NormalXor 生成器文件夹，NormalXor 文件夹中有一个 Generator.py 和一个 Profile.txt。
+(3) 未进行全面的软件测试和压力测试，在简单的运行测试中未发现问题。
 
-```shell
-Shell
-|— Generator
-    |— NormalXor
-        |— Generator.py
-        |— Profile.txt
-```
+(4) 更多问题见 Issues。
 
-在使用 "后门生成" 模块时，只要选择 Profile.txt，客户端就会调用与 Profile.txt 同文件夹下的 Generator.py 对后门源码进行 修改代码 - 编译代码 - 还原代码，来生成 ShellCode、EXE。
+### 5. 免责声明
 
-用户可以在 Generator 文件夹中创建不同的生成器文件夹，也可以在一个生成器文件夹中创建不同 Profile.txt。
+(1) 本项目仅用于网络安全技术的学习研究，旨在提高安全开发能力，研发新的攻防技术。
 
-<mark>(4) 更多二次开发</mark>
+(2) 若执意要将本项目用于安全业务，需先确保已获得足够的法律授权，在符合网络安全法的条件下进行。
 
-可以结合 "命令控制模型" (客户端 - 服务端 - 后门) 对项目源码进行更深的理解。
+(3) 本项目由个人独立开发，暂未做全面的软件测试，请使用者在虚拟环境中测试本项目的功能，以免发生意外。
 
-![屏幕截图 2024-07-16 221156.png](https://github.com/HackerCalico/Magic_C2/blob/main/Client/bin/Debug/config/README/7.png)
+(4) 本项目为远程管理软件，未包含任何实质性的恶意功能，若使用者在使用本项目的过程中存在任何违法行为或造成任何不良影响，需使用者自行承担责任，与项目作者无关。
 
-### 4. 免责声明
+(5) 本项目完全开源，请勿将本项目用于任何商业用途。
 
-(1) 本项目仅用于网络安全技术的学习研究。旨在提高安全开发能力，研发新的攻防技术。
-
-(2) 若执意要将本项目用于渗透测试等安全业务，需先确保已获得足够的法律授权，在符合网络安全法的条件下进行。
-
-(3) 本项目由个人独立开发，暂未做全面的软件测试，请使用者在虚拟环境中测试本项目的功能。
-
-(4) 本项目完全开源，请勿将本项目用于任何商业用途。
-
-(5) 若使用者在使用本项目的过程中存在任何违法行为或造成任何不良影响，需使用者自行承担责任，与项目作者无关。
+(6) 请遵守本项目的 MIT 许可证条款。完整许可证文本参见: https://github.com/HackerCalico/Magic_C2/blob/main/LICENSE
