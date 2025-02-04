@@ -94,5 +94,3 @@ Visual Studio Installer ---> 单个组件 ---> LLVM (clang-cl) 和 Clang ---> �
 (4) 本项目为远程管理软件，未包含任何实质性的恶意功能，若使用者在使用本项目的过程中存在任何违法行为或造成任何不良影响，需使用者自行承担责任，与项目作者无关。
 
 (5) 本项目完全开源，请勿将本项目用于任何商业用途。
-
-(6) 请遵守本项目的 MIT 许可证条款。完整许可证文本参见: https://github.com/HackerCalico/Magic_C2/blob/main/LICENSE
