@@ -51,7 +51,7 @@ go get github.com/mattn/go-sqlite3
 
 go-sqlite3 需要 GCC 的解决方法：
 
-(1) 下载 https://github.com/mstorsjo/llvm-mingw/releases 中的 llvm-mingw-2024xxxx-ucrt-x86_64
+(1) 下载 https://github.com/mstorsjo/llvm-mingw/releases 中的 llvm-mingw-2025xxxx-ucrt-x86_64
 
 (2) 将 bin 添加至环境变量
 
